@@ -3,12 +3,18 @@ const fetch = require('node-fetch');
 const cors = require('cors');
 require('dotenv').config();
 
+// initialize app
 const app = express();
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 const SHOP = process.env.SHOPIFY_STORE;
 const TOKEN = process.env.ADMIN_API_TOKEN;
+
+// basic health check
+app.get('/', (req, res) => {
+  res.send('✅ Order Tracker Backend is Live');
+});
 
 app.get('/track-order', async (req, res) => {
   const orderNumber = req.query.order_number;
@@ -60,5 +66,5 @@ app.get('/track-order', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Server is running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
