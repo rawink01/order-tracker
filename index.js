@@ -3,7 +3,6 @@ const fetch = require('node-fetch');
 const cors = require('cors');
 require('dotenv').config();
 
-// initialize app
 const app = express();
 app.use(cors());
 
@@ -11,7 +10,6 @@ const PORT = process.env.PORT || 3000;
 const SHOP = process.env.SHOPIFY_STORE;
 const TOKEN = process.env.ADMIN_API_TOKEN;
 
-// basic health check
 app.get('/', (req, res) => {
   res.send('✅ Order Tracker Backend is Live');
 });
@@ -41,20 +39,23 @@ app.get('/track-order', async (req, res) => {
       const order = data.orders[0];
       const fulfillmentStatus = order.fulfillment_status || 'unfulfilled';
 
-      const trackingNumbers = [];
+      const tracking = [];
 
       if (order.fulfillments && order.fulfillments.length > 0) {
         order.fulfillments.forEach((fulfillment) => {
-          if (fulfillment.tracking_numbers && fulfillment.tracking_numbers.length > 0) {
-            trackingNumbers.push(...fulfillment.tracking_numbers);
-          }
+          const carrier = fulfillment.tracking_company || 'Unknown Carrier';
+          const numbers = fulfillment.tracking_numbers || [];
+
+          numbers.forEach((num) => {
+            tracking.push(`${carrier} — ${num}`);
+          });
         });
       }
 
       res.json({
         order_number: order.name,
         status: fulfillmentStatus,
-        tracking: trackingNumbers,
+        tracking: tracking.length ? tracking : ['Not Available'],
       });
     } else {
       res.status(404).json({ message: 'Order not found' });
