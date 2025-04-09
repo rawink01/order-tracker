@@ -19,7 +19,7 @@ app.get('/track-order', async (req, res) => {
 
   try {
     const response = await fetch(
-      `https://${SHOP}/admin/api/2023-10/orders.json?name=${orderNumber}&status=any`, // ✅ FIXED: include archived orders
+      `https://${SHOP}/admin/api/2023-10/orders.json?name=${orderNumber}&status=any`,
       {
         method: 'GET',
         headers: {
@@ -60,5 +60,5 @@ app.get('/track-order', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server is running on port ${PORT}`);
 });
